@@ -1,5 +1,9 @@
 <template>
-  <div class="com-container" @dblclick="resetChinaMap">
+  <div
+    class="com-container"
+    @dblclick="resetChinaMap"
+    :title="currentMapText ? mapTips : ''"
+  >
     <!-- 监听escape键，恢复中国地图 -->
     <div
       class="com-chart"
@@ -24,6 +28,7 @@ import { ProvinceInfo } from '@/core/province_info.js';
 export default {
   data () {
     return {
+      mapTips: '双击还原地图',
       chartInstance: null, // echart实例
       data: null, // 请求的数据
       api: new this.$api(),
@@ -35,7 +40,7 @@ export default {
   },
 
   created () {
-    this.$socket.registerCallBack('mapChange', this.changeMap);
+    this.$socket.registerCallBack('mapChange', this.changeMap.bind(this));
   },
 
   async mounted () {

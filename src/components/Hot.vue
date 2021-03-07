@@ -1,8 +1,8 @@
 <template>
   <div class="com-container hot">
     <div class="extendbox">
-      <div @click="previous" class="left arrow" :style="left_arrow_style"></div>
-      <div @click="next" class="right arrow" :style="right_arrow_style"></div>
+      <div @click="previous" class="arrow" :style="left_arrow_style"></div>
+      <div @click="next" class="arrow" :style="right_arrow_style"></div>
       <h5
         v-if="data.length"
         class="category-name"
@@ -36,22 +36,28 @@ export default {
     },
     left_arrow_style () {
       return {
+        left: 0,
         opacity: this.currentDataIndex > 0 ? 1 : 0,
+        cursor: this.currentDataIndex > 0 ? 'pointer' : 'default',
         width: `${this.titleFontSize}px`,
         height: `${this.titleFontSize}px`,
-        borderWidth: `${this.titleFontSize / 5}px`,
         marginLeft: `${this.titleFontSize}px`,
-        borderColor: this.$store.state.theme === 'chalk' ? '#fff' : '#333'
+        borderColor: this.$store.state.theme === 'chalk' ? '#fff' : '#333',
+        borderLeft: `${this.titleFontSize / 5}px solid`,
+        borderBottom: `${this.titleFontSize / 5}px solid`,
       };
     },
     right_arrow_style () {
       return {
+        right: 0,
         opacity: this.currentDataIndex < this.data.length - 1 ? 1 : 0,
+        cursor: this.currentDataIndex < this.data.length - 1 ? 'pointer' : 'default',
         width: `${this.titleFontSize}px`,
         height: `${this.titleFontSize}px`,
-        borderWidth: `${this.titleFontSize / 5}px`,
         marginRight: `${this.titleFontSize}px`,
-        borderColor: this.$store.state.theme === 'chalk' ? '#fff' : '#333'
+        borderColor: this.$store.state.theme === 'chalk' ? '#fff' : '#333',
+        borderRight: `${this.titleFontSize / 5}px solid`,
+        borderTop: `${this.titleFontSize / 5}px solid`,
       };
     },
   },
@@ -244,21 +250,10 @@ export default {
       width: 0px;
       height: 0px;
       display: inline-block;
-      position: relative;
+      position: absolute;
       z-index: 9;
-      cursor: pointer;
       transition: all 0.3s linear;
       transform: rotate(45deg);
-    }
-    .left {
-      border-left: 0px solid;
-      border-bottom: 0px solid;
-      margin-left: 0px;
-    }
-    .right {
-      border-right: 0px solid;
-      border-top: 0px solid;
-      margin-right: 0px;
     }
     .category-name {
       position: absolute;

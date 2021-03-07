@@ -214,6 +214,7 @@ export default {
       background-color: transparent;
       option {
         color: #222733;
+        cursor: pointer;
       }
     }
     .arrow {

@@ -34,6 +34,11 @@ export default {
     methods: {
         enlarge_click(chartName) {
             const value = !Reflect.get(this.fullScreenStatus, chartName);
+            if (value) {
+                window.addEventListener('keyup', this.fullScreenStatus_false);
+            } else {
+                window.removeEventListener('keyup', this.fullScreenStatus_false);
+            }
             this.$socket.send({
                 action: 'fullScreen',
                 socketType: 'fullScreen',
@@ -46,6 +51,20 @@ export default {
             this.$nextTick(() => {
                 Reflect.get(this.$refs, chartName).screenAdapter();
             });
+        },
+        fullScreenStatus_false(e) {
+            if (!e.keyCode === 27) return;
+            for (const chartName in this.fullScreenStatus) {
+                if (Reflect.get(this.fullScreenStatus, chartName)) {
+                    window.removeEventListener('keyup', this.fullScreenStatus_false);
+                    return this.$socket.send({
+                        action: 'fullScreen',
+                        socketType: 'fullScreen',
+                        value: !Reflect.get(this.fullScreenStatus, chartName),
+                        chartName,
+                    });
+                }
+            }
         },
         theme_click() {
             const currentTheme = this.$store.state.theme;
@@ -62,8 +81,8 @@ export default {
         }
     },
     created() {
-        this.$socket.registerCallBack('fullScreen', this.recvData);
-        this.$socket.registerCallBack('themeChange', this.changeTheme);
+        this.$socket.registerCallBack('fullScreen', this.recvData.bind(this));
+        this.$socket.registerCallBack('themeChange', this.changeTheme.bind(this));
         // 右上角时间
         {
             this.timer = null;
@@ -84,6 +103,7 @@ export default {
         }
     },
     destroyed() {
+        window.removeEventListener('keyup', this.fullScreenStatus_false);
         this.$socket.unRegisterCallBack('fullScreen');
         this.$socket.unRegisterCallBack('themeChange');
         clearTimeout(this.timer);
